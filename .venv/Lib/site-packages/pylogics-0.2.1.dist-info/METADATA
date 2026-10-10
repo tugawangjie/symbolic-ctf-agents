@@ -1,0 +1,120 @@
+Metadata-Version: 2.1
+Name: pylogics
+Version: 0.2.1
+Summary: A Python library for logic formalisms representation and manipulation.
+Home-page: https://whitemech.github.io/pylogics
+License: LGPL-3.0-or-later
+Keywords: logic,propositional logic,predicate logic,temporal logic
+Author: MarcoFavorito
+Author-email: marco.favorito@gmail.com
+Requires-Python: >=3.8,<4.0
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: lark (>=1.1.5,<2.0.0)
+Project-URL: Bug Tracker, https://github.com/whitemech/pylogics/issues
+Project-URL: Documentation, https://whitemech.github.io/pylogics
+Project-URL: Pull Requests, https://github.com/whitemech/pylogics/pulls
+Project-URL: Repository, https://github.com/whitemech/pylogics.git
+Description-Content-Type: text/markdown
+
+<h1 align="center">
+  <b>PyLogics</b>
+</h1>
+
+<p align="center">
+  <a href="https://pypi.org/project/pylogics">
+    <img alt="PyPI" src="https://img.shields.io/pypi/v/pylogics">
+  </a>
+  <a href="https://pypi.org/project/pylogics">
+    <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pylogics" />
+  </a>
+  <a href="">
+    <img alt="PyPI - Status" src="https://img.shields.io/pypi/status/pylogics" />
+  </a>
+  <a href="">
+    <img alt="PyPI - Implementation" src="https://img.shields.io/pypi/implementation/pylogics">
+  </a>
+  <a href="">
+    <img alt="PyPI - Wheel" src="https://img.shields.io/pypi/wheel/pylogics">
+  </a>
+  <a href="https://github.com/whitemech/pylogics/blob/master/LICENSE">
+    <img alt="GitHub" src="https://img.shields.io/github/license/whitemech/pylogics">
+  </a>
+</p>
+<p align="center">
+  <a href="">
+    <img alt="test" src="https://github.com/whitemech/pylogics/workflows/test/badge.svg">
+  </a>
+  <a href="">
+    <img alt="lint" src="https://github.com/whitemech/pylogics/workflows/lint/badge.svg">
+  </a>
+  <a href="">
+    <img alt="docs" src="https://github.com/whitemech/pylogics/workflows/docs/badge.svg">
+  </a>
+  <a href="https://codecov.io/gh/whitemech/pylogics">
+    <img alt="codecov" src="https://codecov.io/gh/whitemech/pylogics/branch/master/graph/badge.svg?token=FG3ATGP5P5">
+  </a>
+</p>
+<p align="center">
+  <a href="https://img.shields.io/badge/flake8-checked-blueviolet">
+    <img alt="" src="https://img.shields.io/badge/flake8-checked-blueviolet">
+  </a>
+  <a href="https://img.shields.io/badge/mypy-checked-blue">
+    <img alt="" src="https://img.shields.io/badge/mypy-checked-blue">
+  </a>
+  <a href="https://img.shields.io/badge/code%20style-black-black">
+    <img alt="black" src="https://img.shields.io/badge/code%20style-black-black" />
+  </a>
+  <a href="https://www.mkdocs.org/">
+    <img alt="" src="https://img.shields.io/badge/docs-mkdocs-9cf">
+  </a>
+</p>
+
+
+A Python library for logic formalisms representation and manipulation.
+
+## Install
+
+To install the package from PyPI:
+```
+pip install pylogics
+```
+
+## Tests
+
+To run tests: `tox`
+
+To run only the code tests: `tox -e py3.7`
+
+To run only the linters: 
+- `tox -e flake8`
+- `tox -e mypy`
+- `tox -e black-check`
+- `tox -e isort-check`
+
+Please look at the `tox.ini` file for the full list of supported commands. 
+
+## Docs
+
+To build the docs: `mkdocs build`
+
+To view documentation in a browser: `mkdocs serve`
+and then go to [http://localhost:8000](http://localhost:8000)
+
+## License
+
+pylogics is released under the GNU Lesser General Public License v3.0 or later (LGPLv3+).
+
+Copyright 2021 WhiteMech
+
+## Authors
+
+- [Marco Favorito](https://github.com/marcofavorito)
+

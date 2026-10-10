@@ -1,0 +1,66 @@
+start: ldlf_formula
+
+?ldlf_formula:     ldlf_equivalence
+?ldlf_equivalence: ldlf_implication (EQUIVALENCE ldlf_implication)*
+?ldlf_implication: ldlf_or (IMPLY ldlf_or)*
+?ldlf_or:          ldlf_and (OR ldlf_and)*
+?ldlf_and:         ldlf_unaryop (AND ldlf_unaryop)*
+
+?ldlf_unaryop:     ldlf_box
+             |     ldlf_diamond
+             |     ldlf_not
+             |     ldlf_wrapped
+?ldlf_box:         LEFT_SQUARE_BRACKET regular_expression RIGHT_SQUARE_BRACKET ldlf_unaryop
+?ldlf_diamond:     LEFT_ANGLE_BRACKET regular_expression RIGHT_ANGLE_BRACKET ldlf_unaryop
+?ldlf_not:         NOT ldlf_unaryop
+?ldlf_wrapped:    ldlf_atom
+             |    LEFT_PARENTHESIS ldlf_formula RIGHT_PARENTHESIS
+?ldlf_atom:       ldlf_tt
+          |       ldlf_ff
+          |       ldlf_last
+          |       ldlf_end
+
+
+ldlf_tt: TT
+ldlf_ff: FF
+ldlf_last: LAST
+ldlf_end: END
+
+regular_expression: re_union
+
+?re_union:      re_sequence (UNION re_sequence)*
+?re_sequence:   re_star (SEQ re_star)*
+?re_star:       re_test STAR?
+?re_test:       ldlf_formula TEST
+        |       re_wrapped
+?re_wrapped:    re_propositional
+           |    LEFT_PARENTHESIS regular_expression RIGHT_PARENTHESIS
+re_propositional: propositional_formula
+
+
+LEFT_SQUARE_BRACKET: "["
+RIGHT_SQUARE_BRACKET: "]"
+LEFT_ANGLE_BRACKET: "<"
+RIGHT_ANGLE_BRACKET: ">"
+UNION: "+"
+SEQ: ";"
+TEST: "?"
+STAR: "*"
+
+%ignore /\s+/
+
+%import  .pl.propositional_formula
+%import  .pl.TRUE -> TRUE
+%import  .pl.FALSE -> FALSE
+%import  .pl.SYMBOL_NAME -> SYMBOL_NAME
+%import  .pl.EQUIVALENCE -> EQUIVALENCE
+%import  .pl.IMPLY -> IMPLY
+%import  .pl.OR -> OR
+%import  .pl.AND -> AND
+%import  .pl.NOT -> NOT
+%import  .pl.LEFT_PARENTHESIS -> LEFT_PARENTHESIS
+%import  .pl.RIGHT_PARENTHESIS -> RIGHT_PARENTHESIS
+%import  .ltl.LAST -> LAST
+%import  .ltl.END -> END
+%import  .ltl.TT -> TT
+%import  .ltl.FF -> FF
