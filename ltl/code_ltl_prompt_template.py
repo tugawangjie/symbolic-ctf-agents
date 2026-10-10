@@ -7,6 +7,7 @@ from ltl_operators import ap  # ap(action, obj)
 from ltl_operators import ltl_and, ltl_or, ltl_not, ltl_until, ltl_eventually, ltl_always, ltl_imply  # LTL operators
 
 
+
 def example_0():
     """
     Here are examples of how to use the LTL operators

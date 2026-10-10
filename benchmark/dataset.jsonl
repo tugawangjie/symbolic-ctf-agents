@@ -1,3 +1,6 @@
+"""
+1v1 environment (individial agent action)
+"""
 {"id": "t001", "english": "Capture the flag.", "ltl": "F flag_captured", "category": "basic_goal", "difficulty": "easy", "split": "fewshot", "mode": "1v1", "group": "g_capture", "expected_error": null, "notes": ""}
 {"id": "t002", "english": "Grab the enemy flag.", "ltl": "F a1_has_flag", "category": "basic_goal", "difficulty": "easy", "split": "fewshot", "mode": "1v1", "group": "g_grab", "expected_error": null, "notes": ""}
 {"id": "t003", "english": "Eventually reach their flag.", "ltl": "F a1_near_enemy_flag", "category": "basic_goal", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
@@ -32,11 +35,34 @@
 {"id": "t032", "english": "Whenever you get tagged, make it back to a home base.", "ltl": "G (a1_is_tagged -> F a1_at_home_base)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Tagged agents must return to a home base to untag (rules: Untagging)."}
 {"id": "t033", "english": "Never carry the flag out of bounds.", "ltl": "G !(a1_has_flag & a1_out_of_bounds)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
 {"id": "t034", "english": "Whenever you pick up the flag, head back to our half.", "ltl": "G (a1_has_flag -> F a1_in_own_half)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
+{"id": "t035", "english": "Return to a home base.", "ltl": "F a1_at_home_base", "category": "basic_goal", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Rules: home bases are the corner quarter-circles."}
+{"id": "t036", "english": "Avoid collisions.", "ltl": "G !a1_collision", "category": "safety", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Rules: collision = within 4 m of any other agent; fewer collisions is a tie-breaker."}
+{"id": "t037", "english": "Don't bump into anyone.", "ltl": "G !a1_collision", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_collision", "expected_error": null, "notes": ""}
+{"id": "t038", "english": "Never get closer than four meters to another agent.", "ltl": "G !a1_collision", "category": "paraphrase", "difficulty": "medium", "split": "test", "mode": "1v1", "group": "g_collision", "expected_error": null, "notes": "Four meters is the collision radius in the rules."}
+{"id": "t039", "english": "Go back to base after you grab the flag and capture it.", "ltl": "F (a1_has_flag & F (a1_at_home_base & flag_captured))", "category": "ordering", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Capture requires reaching a home base while carrying the flag."}
+{"id": "t040", "english": "In the last minute, stay in our half.", "ltl": "G (final_minute -> a1_in_own_half)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Uses PROPOSED final_minute proposition."}
+{"id": "t041", "english": "Stay near our flag while their powerplay is active.", "ltl": "G (opp_powerplay_active -> a1_near_own_flag)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
+{"id": "t042", "english": "During our powerplay, go for their flag.", "ltl": "G (own_powerplay_active -> F a1_near_enemy_flag)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
+{"id": "t043", "english": "Stay in our half and tag any opponent who comes in.", "ltl": "G a1_in_own_half & G (o1_in_enemy_half -> F o1_is_tagged)", "category": "nested", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Perspective trap: o1_in_enemy_half means o1 is in OUR half. Rules: tags only happen in the tagger's own half."}
+
+
+
+"""
+Paragraph agent category
+"""
 {"id": "p001", "english": "Score a point.", "ltl": "F flag_captured", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_capture", "expected_error": null, "notes": ""}
 {"id": "p002", "english": "Bring their flag back to our side.", "ltl": "F flag_captured", "category": "paraphrase", "difficulty": "medium", "split": "test", "mode": "1v1", "group": "g_capture", "expected_error": null, "notes": "Treats capture as returning the flag home."}
 {"id": "p003", "english": "Pick up the enemy flag.", "ltl": "F a1_has_flag", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_grab", "expected_error": null, "notes": ""}
 {"id": "p004", "english": "You must not be tagged at any point.", "ltl": "G !a1_is_tagged", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_notag", "expected_error": null, "notes": ""}
 {"id": "p005", "english": "Make sure you always stay inside the boundary.", "ltl": "G !a1_out_of_bounds", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_bounds", "expected_error": null, "notes": ""}
+
+
+
+
+
+
+
+"Multi agent behavior"
 {"id": "m001", "english": "Agent 2 should guard our flag.", "ltl": "G a2_near_own_flag", "category": "multi_agent", "difficulty": "easy", "split": "fewshot", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m002", "english": "Agent 1 grabs the flag while agent 2 stays near our flag.", "ltl": "F a1_has_flag & G a2_near_own_flag", "category": "multi_agent", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m003", "english": "Agent 3 must never be tagged.", "ltl": "G !a3_is_tagged", "category": "multi_agent", "difficulty": "easy", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
@@ -47,23 +73,16 @@
 {"id": "m008", "english": "Tag any opponent.", "ltl": "F (o1_is_tagged | o2_is_tagged | o3_is_tagged)", "category": "multi_agent", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m009", "english": "Never let any opponent carry a flag.", "ltl": "G !(o1_has_flag | o2_has_flag | o3_has_flag)", "category": "multi_agent", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m010", "english": "Agent 1 and agent 3 must both avoid being tagged.", "ltl": "G (!a1_is_tagged & !a3_is_tagged)", "category": "multi_agent", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
-{"id": "t035", "english": "Return to a home base.", "ltl": "F a1_at_home_base", "category": "basic_goal", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Rules: home bases are the corner quarter-circles."}
-{"id": "t036", "english": "Avoid collisions.", "ltl": "G !a1_collision", "category": "safety", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Rules: collision = within 4 m of any other agent; fewer collisions is a tie-breaker."}
-{"id": "t037", "english": "Don't bump into anyone.", "ltl": "G !a1_collision", "category": "paraphrase", "difficulty": "easy", "split": "test", "mode": "1v1", "group": "g_collision", "expected_error": null, "notes": ""}
-{"id": "t038", "english": "Never get closer than four meters to another agent.", "ltl": "G !a1_collision", "category": "paraphrase", "difficulty": "medium", "split": "test", "mode": "1v1", "group": "g_collision", "expected_error": null, "notes": "Four meters is the collision radius in the rules."}
-{"id": "t039", "english": "Go back to base after you grab the flag and capture it.", "ltl": "F (a1_has_flag & F (a1_at_home_base & flag_captured))", "category": "ordering", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Capture requires reaching a home base while carrying the flag."}
-{"id": "t040", "english": "In the last minute, stay in our half.", "ltl": "G (final_minute -> a1_in_own_half)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Uses PROPOSED final_minute proposition."}
-{"id": "t041", "english": "Stay near our flag while their powerplay is active.", "ltl": "G (opp_powerplay_active -> a1_near_own_flag)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
-{"id": "t042", "english": "During our powerplay, go for their flag.", "ltl": "G (own_powerplay_active -> F a1_near_enemy_flag)", "category": "nested", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": ""}
-{"id": "t043", "english": "Stay in our half and tag any opponent who comes in.", "ltl": "G a1_in_own_half & G (o1_in_enemy_half -> F o1_is_tagged)", "category": "nested", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": null, "notes": "Perspective trap: o1_in_enemy_half means o1 is in OUR half. Rules: tags only happen in the tagger's own half."}
 {"id": "m011", "english": "Agent 3 must never collide with anyone.", "ltl": "G !a3_collision", "category": "multi_agent", "difficulty": "easy", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m012", "english": "Whenever agent 2 is disabled, agent 1 stays near our flag.", "ltl": "G (a2_is_disabled -> a1_near_own_flag)", "category": "multi_agent", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m013", "english": "If their powerplay is on, have agents 2 and 3 stay in our half.", "ltl": "G (opp_powerplay_active -> (a2_in_own_half & a3_in_own_half))", "category": "multi_agent", "difficulty": "hard", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": ""}
 {"id": "m014", "english": "Agents 1 and 2 return to base after any of us gets tagged.", "ltl": "G ((a1_is_tagged | a2_is_tagged | a3_is_tagged) -> F (a1_at_home_base & a2_at_home_base))", "category": "multi_agent", "difficulty": "hard", "split": "test", "mode": "3v3", "group": null, "expected_error": null, "notes": "Ambiguous: could also mean only the tagged agent returns. Canonical reading chosen: agents 1 and 2 both go."}
-{"id": "n010", "english": "Grab the flag while you are tagged.", "ltl": "F (a1_has_flag & a1_is_tagged)", "category": "contradictory", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Rules: tagged agents cannot interact with flags; a carried flag is returned on tag."}
-{"id": "n011", "english": "Stay out of bounds forever without ever being tagged.", "ltl": "F G a1_out_of_bounds & G !a1_is_tagged", "category": "contradictory", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Rules: leaving the field is an automatic tag."}
-{"id": "n012", "english": "Stay at a home base while being in their half.", "ltl": "F G (a1_at_home_base & a1_in_enemy_half)", "category": "contradictory", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Home bases are in our own half, so this contradicts the field layout."}
-{"id": "n001", "english": "Always have the flag and never have the flag.", "ltl": "G a1_has_flag & G !a1_has_flag", "category": "contradictory", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT", "notes": ""}
+
+
+
+"""
+Error check datapoints (not a command)
+"""
 {"id": "n002", "english": "Never leave the field, but go out of bounds at some point.", "ltl": "G !a1_out_of_bounds & F a1_out_of_bounds", "category": "contradictory", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT", "notes": ""}
 {"id": "n003", "english": "Get tagged at some point, but never get tagged.", "ltl": "F a1_is_tagged & G !a1_is_tagged", "category": "contradictory", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT", "notes": ""}
 {"id": "n004", "english": "Always stay in our half and always stay in their half.", "ltl": "G a1_in_own_half & G a1_in_enemy_half", "category": "contradictory", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Only UNSAT if the verifier adds the domain constraint G !(a1_in_own_half & a1_in_enemy_half). Plain Spot will call it satisfiable."}
@@ -72,3 +91,8 @@
 {"id": "n007", "english": "Switch agent 3 to the defender role.", "ltl": null, "category": "out_of_vocab", "difficulty": "medium", "split": "test", "mode": "3v3", "group": null, "expected_error": "OUT_OF_VOCAB", "notes": "Roles are handled outside LTL (see props.yaml open question 3)."}
 {"id": "n008", "english": "What is the weather like today?", "ltl": null, "category": "not_a_command", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "NOT_A_COMMAND", "notes": ""}
 {"id": "n009", "english": "asdf qwerty zxcv", "ltl": null, "category": "not_a_command", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "NOT_A_COMMAND", "notes": ""}
+{"id": "n010", "english": "Grab the flag while you are tagged.", "ltl": "F (a1_has_flag & a1_is_tagged)", "category": "contradictory", "difficulty": "medium", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Rules: tagged agents cannot interact with flags; a carried flag is returned on tag."}
+{"id": "n011", "english": "Stay out of bounds forever without ever being tagged.", "ltl": "F G a1_out_of_bounds & G !a1_is_tagged", "category": "contradictory", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Rules: leaving the field is an automatic tag."}
+{"id": "n012", "english": "Stay at a home base while being in their half.", "ltl": "F G (a1_at_home_base & a1_in_enemy_half)", "category": "contradictory", "difficulty": "hard", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT_DOMAIN", "notes": "Home bases are in our own half, so this contradicts the field layout."}
+{"id": "n001", "english": "Always have the flag and never have the flag.", "ltl": "G a1_has_flag & G !a1_has_flag", "category": "contradictory", "difficulty": "easy", "split": "test", "mode": "1v1", "group": null, "expected_error": "UNSAT", "notes": ""}
+{"id": "n013", "english": "Could you walk to out of bounds?", "ltl": null, "category": "not_a_command", "difficulty": "medium", "split":"test", "mode": "1v1", "group": null, "expected_error": "NOT_A_Command", "notes": "An agent cannot be out of bounds at all times"}
