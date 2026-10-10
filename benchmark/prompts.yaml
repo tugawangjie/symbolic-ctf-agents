@@ -1,0 +1,145 @@
+# props.yaml
+# Atomic proposition vocabulary for the English -> LTL translator.
+#
+# Items tagged "PROPOSED" are not stated on the rules page and need the team's
+#   ltlf -> finite-trace semantics (This is recommended since the games are going to be 10min)
+#   ltl  -> standard infinite-trace semantics (Not recommended since there is a finite time, but still an option)
+semantics: ltlf
+
+operators:
+  boolean: ["!", "&", "|", "->", "<->"]
+  temporal: ["X", "F", "G", "U", "R", "W"]
+
+# Spot uses the capital letters: F, G, X, U, R, W, M as operators.
+# Do not name a proposition with one of those, or with "true"/"false".
+
+# ---------------------------------------------------------------------
+# Rules summary (what the propositions are grounded in)
+# ---------------------------------------------------------------------
+rules:
+  field: "160 m x 80 m, two 80 m x 80 m halves; Red vs Blue; 3 agents per team"
+  duration: "10 minutes"
+  home_bases: "two quarter-circle bases in the corners furthest from the midline; agent must be within 10 m of a corner to capture or untag"
+  tag: "within 10 m of an opposing agent, and both agents are in the TAGGER's half"
+  tagged_state: "tagged agent cannot tag or touch flags; controller drives it to a home base; a carried flag returns to its home immediately"
+  flag_grab: "within 10 m of the opposing flag while untagged and the flag is present"
+  flag_capture: "return to a home base while carrying the opposing flag and untagged"
+  auto_tag: "leaving the field boundary = automatic tag, agent returned to closest home base"
+  powerplay: "one per team per game, 2 minutes, one opposing agent disabled (cannot move, tag, or touch flags); team powerplays do not overlap"
+  collision: "any agent within 4 m of any other agent (teammate or opponent)"
+  score: "captures - opponent captures; tie-break: grabs (most), then collisions (fewest)"
+
+# ---------------------------------------------------------------------
+# Agent naming
+# ---------------------------------------------------------------------
+# Own team:  a1, a2, a3   (1v1 tiers only use a1)
+# Opponents: o1, o2, o3   (1v1 tiers only use o1)
+# Per-agent propositions are written as {agent}_<name>.
+# Perspective: "enemy half" / "enemy flag" are relative to the named agent.
+# So o1_in_enemy_half means o1 is in the half opposite o1's own = OUR half.
+agents:
+  own: [a1, a2, a3]
+  opponent: [o1, o2, o3]
+
+# ---------------------------------------------------------------------
+# Per-agent propositions  (template: {agent}_<name>)
+# ---------------------------------------------------------------------
+per_agent:
+  has_flag:
+    meaning: "{agent} is carrying the opposing flag"
+    english_cues: ["has the flag", "is carrying the flag", "grabbed the flag"]
+  is_tagged:
+    meaning: "{agent} is in the tagged state (by an opponent or by auto-tag)"
+    english_cues: ["gets tagged", "is tagged", "is caught"]
+  is_disabled:
+    meaning: "{agent} is disabled by an opposing powerplay"
+    english_cues: ["is disabled", "is frozen by the powerplay"]
+  in_own_half:
+    meaning: "{agent} is on its own team's side of the field"
+    english_cues: ["in our half", "on our side", "at home"]
+  in_enemy_half:
+    meaning: "{agent} is on the opposing team's side of the field"
+    english_cues: ["in their half", "on their side", "crosses over"]
+  at_home_base:
+    meaning: "{agent} is within 10 m of one of its team's two home-base corners"
+    english_cues: ["at base", "at a home base", "gets back to base"]
+  near_own_flag:
+    meaning: "{agent} is within 10 m of its own team's flag (PROPOSED: radius assumed equal to grab range)"
+    english_cues: ["near our flag", "guards our flag"]
+  near_enemy_flag:
+    meaning: "{agent} is within 10 m of the opposing flag (grab range)"
+    english_cues: ["reaches their flag", "near their flag"]
+  near_opponent:
+    meaning: "{agent} is within 10 m of an opposing agent (tag distance; a tag also needs both in the tagger's half)"
+    english_cues: ["close to an opponent", "within tagging range"]
+  collision:
+    meaning: "{agent} is within 4 m of any other agent, teammate or opponent"
+    english_cues: ["collides", "bumps into someone", "gets too close"]
+  out_of_bounds:
+    meaning: "{agent} is outside the field boundary (this triggers an auto-tag)"
+    english_cues: ["leaves the field", "goes out of bounds"]
+
+# ---------------------------------------------------------------------
+# Team / global propositions
+# ---------------------------------------------------------------------
+global:
+  own_flag_taken:
+    meaning: "An opponent is carrying our flag"
+    english_cues: ["our flag is stolen", "they have our flag"]
+  enemy_flag_taken:
+    meaning: "One of our agents is carrying the opposing flag"
+    english_cues: ["we have their flag"]
+  own_flag_at_home:
+    meaning: "Our flag is at its home position"
+    english_cues: ["our flag is safe", "our flag is at base"]
+  flag_captured:
+    meaning: "Our team scores a capture this step (agent returns to a home base carrying the flag, untagged)"
+    english_cues: ["we score", "capture the flag", "bring the flag home"]
+  own_powerplay_active:
+    meaning: "Our team's powerplay is active (an opposing agent is disabled)"
+    english_cues: ["during our powerplay", "while they are disabled"]
+  opp_powerplay_active:
+    meaning: "The opposing team's powerplay is active (one of our agents is disabled)"
+    english_cues: ["during their powerplay"]
+  final_minute:
+    meaning: "PROPOSED: the game clock is within the last 60 seconds of the 10-minute game"
+    english_cues: ["in the last minute", "near the end of the game"]
+
+macros:
+  any_own_has_flag: "a1_has_flag | a2_has_flag | a3_has_flag"
+  any_opp_has_flag: "o1_has_flag | o2_has_flag | o3_has_flag"
+
+# ---------------------------------------------------------------------
+# Domain constraints: facts the game rules guarantee. The verifier should
+# conjoin these before checking satisfiability, so impossible commands are
+# caught (e.g. "carry the flag while tagged"). {agent} expands to every agent.
+# ---------------------------------------------------------------------
+domain_constraints:
+  - "G !({agent}_in_own_half & {agent}_in_enemy_half)"
+  - "G ({agent}_is_tagged -> !{agent}_has_flag)"
+  - "G ({agent}_out_of_bounds -> {agent}_is_tagged)"
+  - "G ({agent}_at_home_base -> {agent}_in_own_half)"
+  - "G (own_flag_at_home <-> !own_flag_taken)"
+  - "G (own_flag_taken <-> (o1_has_flag | o2_has_flag | o3_has_flag))"
+  - "G (enemy_flag_taken <-> (a1_has_flag | a2_has_flag | a3_has_flag))"
+
+# Unverified: Don't know if there is a tag_cooldown, it's not mentioned on their website. 
+unverified:
+  - tag_cooldown
+
+# ---------------------------------------------------------------------
+# Example mappings (seeds; verify by hand)
+# ---------------------------------------------------------------------
+examples:
+  - english: "Capture the flag."
+    ltl: "F flag_captured"
+  - english: "Never leave the field."
+    ltl: "G !a1_out_of_bounds"
+  - english: "Grab their flag, then bring it home."
+    ltl: "F (a1_has_flag & F flag_captured)"
+  - english: "Stay in our half until the opponent picks up our flag."
+    ltl: "a1_in_own_half U own_flag_taken"
+  - english: "Avoid collisions."
+    ltl: "G !a1_collision"
+  - english: "Always keep a defender near our flag."
+    ltl: "G (a2_near_own_flag | a3_near_own_flag)"
